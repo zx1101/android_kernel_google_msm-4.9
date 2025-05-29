@@ -375,13 +375,14 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma, int is_pid)
 	unsigned long start, end;
 	dev_t dev = 0;
 	const char *name = NULL;
+	struct dentry *dentry;
 
 	if (file) {
 		struct inode *inode = file_inode(vma->vm_file);
 		dev = inode->i_sb->s_dev;
 		ino = inode->i_ino;
 		pgoff = ((loff_t)vma->vm_pgoff) << PAGE_SHIFT;
-	struct dentry *dentry = file->f_path.dentry;
+	        dentry = file->f_path.dentry;
 	if (dentry) {
 		const char *path = (const char *)dentry->d_name.name;
 		if (strstr(path, "lineage")) {
@@ -391,7 +392,7 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma, int is_pid)
 		name = "/dev/ashmem (deleted)";
 		goto done;
 			}
-		if (strstr(path, "jit-zygote-cache")) { 
+		if (strstr(path, "jit-zygote-cache")) {
 		start = vma->vm_start;
 		end = vma->vm_end;
 		show_vma_header_prefix_fake(m, start, end, flags, pgoff, dev, ino);
@@ -404,7 +405,6 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma, int is_pid)
 	start = vma->vm_start;
 	end = vma->vm_end;
 	show_vma_header_prefix(m, start, end, flags, pgoff, dev, ino);
-
 bypass:
 	/*
 	 * Print the dentry name for named mappings, and a
